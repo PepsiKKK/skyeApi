@@ -1,0 +1,2 @@
+# ??? Spring Boot ?????
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.skye.skyeApiClientSdk.SkyeApiClientConfig

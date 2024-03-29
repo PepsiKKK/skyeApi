@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: skyeApi-interface
+
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+skye:
+  api:
+    client:
+      access-key: skye
+      secret-key: 1234
