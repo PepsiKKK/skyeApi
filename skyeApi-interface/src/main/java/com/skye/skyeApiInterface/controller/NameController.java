@@ -55,7 +55,8 @@ public class NameController {
             throw new RuntimeException("无权限");
         }
         //通过
-        return "POST 用户名字是" + user.getUsername();
+        String resule = "POST 用户名字是" + user.getUsername();
+        return resule;
     }
 
 }

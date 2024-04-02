@@ -2,12 +2,14 @@ package com.yupi.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.skye.skyeApiClientSdk.client.SkyeApiClient;
 import com.yupi.project.annotation.AuthCheck;
 import com.yupi.project.common.*;
 import com.yupi.project.constant.CommonConstant;
 import com.yupi.project.exception.BusinessException;
 import com.yupi.project.model.dto.interfaceInfo.InterfaceInfoAddRequest;
+import com.yupi.project.model.dto.interfaceInfo.InterfaceInfoInvokeRequest;
 import com.yupi.project.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.yupi.project.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
 import com.yupi.project.model.entity.InterfaceInfo;
@@ -272,6 +274,49 @@ public class InterfaceInfoController {
         interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
         boolean res = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(res);
+    }
+
+
+    /**
+     * 下线
+     *
+     * @param interfaceInfoInvokeRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
+                                                     HttpServletRequest request) {
+        //如果id为null或id小于等于0
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //获取参数的id值
+        long id = interfaceInfoInvokeRequest.getId();
+        //获取用户请求参数
+        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+        //判断查询结果
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null){
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        //判断是否为下线状态
+        if (oldInterfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue()) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
+        }
+        //获取当前用户的ak和sk，相当于用户通过自己的身份去调用
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        //新建一个临时的skyeApiClient对象，用于传入用户自己的ak、sk
+        SkyeApiClient skyeApiClient = new SkyeApiClient(accessKey, secretKey);
+        //只需要进行测试调用，需要解析传递过来的参数
+        Gson gson = new Gson();
+        //将用户请求参数转换为com.skye.skyeApiClientSdk.model.User对象
+        com.skye.skyeApiClientSdk.model.User
+                user = gson.fromJson(userRequestParams, com.skye.skyeApiClientSdk.model.User.class);
+        String result = skyeApiClient.getUserNameByPost(user);
+        return ResultUtils.success(result);
     }
 
 }
