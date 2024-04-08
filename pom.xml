@@ -121,6 +121,13 @@
             <version>2.1.0</version>
         </dependency>
 
+        <!--common包-->
+        <dependency>
+            <groupId>com.skye</groupId>
+            <artifactId>skyeApi-common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

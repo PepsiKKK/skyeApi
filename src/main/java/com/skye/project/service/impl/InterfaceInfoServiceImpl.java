@@ -3,7 +3,7 @@ package com.skye.project.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.skye.project.common.ErrorCode;
 import com.skye.project.exception.BusinessException;
-import com.skye.project.model.entity.InterfaceInfo;
+import com.skye.common.model.entity.InterfaceInfo;
 import com.skye.project.service.InterfaceInfoService;
 import com.skye.project.mapper.InterfaceInfoMapper;
 import org.apache.commons.lang3.StringUtils;

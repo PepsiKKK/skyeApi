@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.skye.project.common.ErrorCode;
 import com.skye.project.exception.BusinessException;
 import com.skye.project.mapper.UserInterfaceInfoMapper;
-import com.skye.project.model.entity.UserInterfaceInfo;
+import com.skye.common.model.entity.UserInterfaceInfo;
 import com.skye.project.service.UserInterfaceInfoService;
 import org.springframework.stereotype.Service;
 

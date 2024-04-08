@@ -7,7 +7,7 @@ import com.skye.project.constant.UserConstant;
 import com.skye.project.exception.BusinessException;
 import com.skye.project.mapper.UserMapper;
 import com.skye.project.common.ErrorCode;
-import com.skye.project.model.entity.User;
+import com.skye.common.model.entity.User;
 import com.skye.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

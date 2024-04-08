@@ -2,7 +2,7 @@ package com.skye.project.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.skye.project.model.entity.User;
+import com.skye.common.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 

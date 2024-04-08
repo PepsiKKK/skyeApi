@@ -13,7 +13,7 @@ import com.skye.project.model.dto.post.PostAddRequest;
 import com.skye.project.model.dto.post.PostQueryRequest;
 import com.skye.project.model.dto.post.PostUpdateRequest;
 import com.skye.project.model.entity.Post;
-import com.skye.project.model.entity.User;
+import com.skye.common.model.entity.User;
 import com.skye.project.service.PostService;
 import com.skye.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.skye.project.service;
 
-import com.skye.project.model.entity.User;
+import com.skye.common.model.entity.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
 package com.skye.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.skye.project.model.entity.InterfaceInfo;
+import com.skye.common.model.entity.InterfaceInfo;
 
 
 /**

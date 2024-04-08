@@ -9,7 +9,7 @@ import com.skye.project.common.DeleteRequest;
 import com.skye.project.common.ErrorCode;
 import com.skye.project.common.ResultUtils;
 import com.skye.project.model.dto.user.*;
-import com.skye.project.model.entity.User;
+import com.skye.common.model.entity.User;
 import com.skye.project.model.vo.UserVO;
 import com.skye.project.service.UserService;
 //import com.yupi.project.model.dto.user.*;
