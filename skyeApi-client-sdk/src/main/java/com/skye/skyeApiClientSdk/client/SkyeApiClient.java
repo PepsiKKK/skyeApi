@@ -18,6 +18,7 @@ import static com.skye.skyeApiClientSdk.utils.SignUtils.genSign;
  */
 public class SkyeApiClient {
 
+    private static final String GATEWAY_HOST = "http://localhost:8090";
     private String accessKey;
     private String secretKey;
 
@@ -29,14 +30,14 @@ public class SkyeApiClient {
     public String getNameByGet(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        String result= HttpUtil.get("http://localhost:8123/api/name/", paramMap);
+        String result= HttpUtil.get(GATEWAY_HOST + "/api/name/", paramMap);
         return result;
     }
 
     public String getNameByPost(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        String result= HttpUtil.post("http://localhost:8123/api/name/", paramMap);
+        String result= HttpUtil.post(GATEWAY_HOST + "/api/name/", paramMap);
         return result;
     }
 
@@ -73,7 +74,7 @@ public class SkyeApiClient {
 
         // 将用户对象转换为JSON字符串
         String json = JSONUtil.toJsonStr(user);
-        HttpResponse httpResponse = HttpRequest.post("http://localhost:8123/api/name/json")
+        HttpResponse httpResponse = HttpRequest.post(GATEWAY_HOST + "/api/name/json")
                 // 添加请求头
                 .addHeaders(getHeaderMap(json))
                 // 设置请求体
