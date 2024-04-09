@@ -2,6 +2,9 @@ server:
   port: 8090
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   cloud:
     gateway:
 #      discovery:
@@ -28,19 +31,29 @@ logging:
           gateway: trace
 
 # 以下配置指定了应用的名称、使用的协议（Dubbo）、注册中心的类型（Nacos）和地址
-dubbo:
-  qos:
-    port: 22223
-    enabled: false
-  application:
-    # 设置应用的名称
-    name: dubbo-springboot-demo-provider
+#dubbo:
+#  qos:
+#    port: 22223
+#    enabled: false
+#  application:
+#    # 设置应用的名称
+#    name: dubbo-springboot-demo-provider
+#
+#  # 指定使用 Dubbo 协议，且端口设置为 -1，表示随机分配可用端口
+#  protocol:
+#    name: dubbo
+#    port: 23456
+#  registry:
+#    # 配置注册中心为 Nacos，使用的地址是 nacos://localhost:8848
+#    id: nacos-registry
+#    address: nacos://localhost:8848
 
-  # 指定使用 Dubbo 协议，且端口设置为 -1，表示随机分配可用端口
+dubbo:
+  application:
+    name: dubbo-springboot-demo-consumer
   protocol:
     name: dubbo
-    port: 23456
+    port: -1
   registry:
-    # 配置注册中心为 Nacos，使用的地址是 nacos://localhost:8848
     id: nacos-registry
     address: nacos://localhost:8848

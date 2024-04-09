@@ -291,7 +291,7 @@ public class InterfaceInfoController {
         if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        //获取参数的id值
+        //获取接口的id值
         long id = interfaceInfoInvokeRequest.getId();
         //获取用户请求参数
         String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();

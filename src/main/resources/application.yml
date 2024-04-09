@@ -33,11 +33,11 @@ mybatis-plus:
       logic-delete-value: 1 # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 
-skye:
-  api:
-    client:
-      access-key: skye
-      secret-key: 1234
+#skye:
+#  api:
+#    client:
+#      access-key: skye
+#      secret-key: 1234
 
 # 以下配置指定了应用的名称、使用的协议（Dubbo）、注册中心的类型（Nacos）和地址
 dubbo:
