@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 权限校验
- *
- * @author yupi
+ * AOP切面监控的注解
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

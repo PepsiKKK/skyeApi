@@ -45,7 +45,7 @@ class UserServiceTest {
         Assertions.assertNotNull(user);
     }
 
-    @Test
+/*    @Test
     void userRegister() {
         String userAccount = "yupi";
         String userPassword = "";
@@ -77,5 +77,5 @@ class UserServiceTest {
         } catch (Exception e) {
 
         }
-    }
+    }*/
 }

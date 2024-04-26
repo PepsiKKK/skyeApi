@@ -12,9 +12,8 @@ import com.skye.project.model.dto.user.*;
 import com.skye.common.model.entity.User;
 import com.skye.project.model.vo.UserVO;
 import com.skye.project.service.UserService;
-//import com.yupi.project.model.dto.user.*;
-import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +25,12 @@ import java.util.stream.Collectors;
 /**
  * 用户接口
  *
- * @author yupi
+ * @author skye
  */
 @RestController
 @RequestMapping("/user")
-@Api(tags = "用户接口")
+@Slf4j
+//@Api(tags = "用户接口")
 public class UserController {
 
     @Resource
@@ -40,57 +40,37 @@ public class UserController {
 
     /**
      * 用户注册
-     *
-     * @param userRegisterRequest
-     * @return
+     * @param userRegisterRequest 请求参数
+     * @return 状态码
      */
     @PostMapping("/register")
+    @ApiOperation("用户注册")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
-        if (userRegisterRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        String userAccount = userRegisterRequest.getUserAccount();
-        String userPassword = userRegisterRequest.getUserPassword();
-        String checkPassword = userRegisterRequest.getCheckPassword();
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
-            return null;
-        }
-        long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        long result = userService.userRegister(userRegisterRequest);
         return ResultUtils.success(result);
     }
 
     /**
      * 用户登录
-     *
-     * @param userLoginRequest
-     * @param request
-     * @return
+     * @param userLoginRequest 请求参数
+     * @param request 请求
+     * @return 状态码
      */
     @PostMapping("/login")
+    @ApiOperation("用户登录")
     public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
-        if (userLoginRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        String userAccount = userLoginRequest.getUserAccount();
-        String userPassword = userLoginRequest.getUserPassword();
-        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = userService.userLogin(userAccount, userPassword, request);
+        User user = userService.userLogin(userLoginRequest, request);
         return ResultUtils.success(user);
     }
 
     /**
      * 用户注销
-     *
      * @param request
      * @return
      */
     @PostMapping("/logout")
+    @ApiOperation("用户注销")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
-        if (request == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
         boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
@@ -102,6 +82,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get/login")
+    @ApiOperation("获取当前用户")
     public BaseResponse<UserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         UserVO userVO = new UserVO();
