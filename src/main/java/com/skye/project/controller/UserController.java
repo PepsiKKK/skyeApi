@@ -3,17 +3,17 @@ package com.skye.project.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.skye.common.model.enums.UserAccountStatusEnum;
+import com.skye.project.annotation.AuthCheck;
+import com.skye.project.common.*;
 import com.skye.project.exception.BusinessException;
-import com.skye.project.common.BaseResponse;
-import com.skye.project.common.DeleteRequest;
-import com.skye.project.common.ErrorCode;
-import com.skye.project.common.ResultUtils;
 import com.skye.project.model.dto.user.*;
 import com.skye.common.model.entity.User;
 import com.skye.project.model.vo.UserVO;
 import com.skye.project.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.skye.project.constant.UserConstant.ADMIN_ROLE;
 
 /**
  * 用户接口
@@ -58,9 +60,11 @@ public class UserController {
      */
     @PostMapping("/login")
     @ApiOperation("用户登录")
-    public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public BaseResponse<UserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         User user = userService.userLogin(userLoginRequest, request);
-        return ResultUtils.success(user);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return ResultUtils.success(userVO);
     }
 
     /**
@@ -103,15 +107,7 @@ public class UserController {
      */
     @PostMapping("/add")
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
-        if (userAddRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = new User();
-        BeanUtils.copyProperties(userAddRequest, user);
-        boolean result = userService.save(user);
-        if (!result) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR);
-        }
+        User user = userService.addUser(userAddRequest, request);
         return ResultUtils.success(user.getId());
     }
 
@@ -219,5 +215,47 @@ public class UserController {
         return ResultUtils.success(userVOPage);
     }
 
+    /**
+     * 解封
+     *
+     * @param idRequest id请求
+     * @return {@link BaseResponse}<{@link Boolean}>
+     */
+    @AuthCheck(mustRole = ADMIN_ROLE)
+    @PostMapping("/normal")
+    public BaseResponse<Boolean> normalUser(@RequestBody IdRequest idRequest) {
+        if (ObjectUtils.anyNull(idRequest, idRequest.getId()) || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = idRequest.getId();
+        User user = userService.getById(id);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        user.setStatus(UserAccountStatusEnum.NORMAL.getValue());
+        return ResultUtils.success(userService.updateById(user));
+    }
+
+    /**
+     * 封号
+     *
+     * @param idRequest id请求
+     * @param request   请求
+     * @return {@link BaseResponse}<{@link Boolean}>
+     */
+    @PostMapping("/ban")
+    @AuthCheck(mustRole = ADMIN_ROLE)
+    public BaseResponse<Boolean> banUser(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+        if (ObjectUtils.anyNull(idRequest, idRequest.getId()) || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = idRequest.getId();
+        User user = userService.getById(id);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        user.setStatus(UserAccountStatusEnum.BAN.getValue());
+        return ResultUtils.success(userService.updateById(user));
+    }
     // endregion
 }

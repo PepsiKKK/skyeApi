@@ -3,6 +3,7 @@ package com.skye.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.skye.common.model.entity.User;
+import com.skye.project.model.dto.user.UserAddRequest;
 import com.skye.project.model.dto.user.UserLoginRequest;
 import com.skye.project.model.dto.user.UserRegisterRequest;
 
@@ -55,4 +56,13 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean userLogout(HttpServletRequest request);
+
+    /**
+     * 添加用户
+     * @param userAddRequest
+     * @param request
+     * @return
+     */
+    User addUser(UserAddRequest userAddRequest, HttpServletRequest request);
+
 }

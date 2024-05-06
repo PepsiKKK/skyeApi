@@ -8,11 +8,13 @@ import com.skye.project.exception.BusinessException;
 import com.skye.project.mapper.UserMapper;
 import com.skye.project.common.ErrorCode;
 import com.skye.common.model.entity.User;
+import com.skye.project.model.dto.user.UserAddRequest;
 import com.skye.project.model.dto.user.UserLoginRequest;
 import com.skye.project.model.dto.user.UserRegisterRequest;
 import com.skye.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -189,6 +191,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return true;
     }
 
+    @Override
+    public User addUser(UserAddRequest userAddRequest, HttpServletRequest request) {
+        if (userAddRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        String userAccount = userAddRequest.getUserAccount();
+        String userPassword = userAddRequest.getUserPassword();
+
+        //校验
+        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        if (userAccount.length() < 4) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号不少于4个字符");
+        }
+        if (userAccount.length() >20) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号不多于20个字符");
+        }
+        if (userPassword.length() < 8) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userAddRequest, user);
+        //加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + user.getUserPassword()).getBytes());
+        //分配ak，sk
+        String accessKsy = DigestUtils.md5DigestAsHex((SALT + user.getUserAccount() + RandomUtil.randomNumbers(5)).getBytes());
+        String secretKey = DigestUtils.md5DigestAsHex((SALT + user.getUserAccount() + RandomUtil.randomNumbers(8)).getBytes());
+
+        user.setUserPassword(encryptPassword);
+        user.setAccessKey(accessKsy);
+        user.setSecretKey(secretKey);
+
+        int result = userMapper.insert(user);
+        if (result != 1) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR);
+        }
+        return user;
+    }
 }
 
 
