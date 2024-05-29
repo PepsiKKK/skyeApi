@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,6 +38,8 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    private static final String SALT = "skye";
 
     // region 登录相关
 
@@ -141,6 +144,7 @@ public class UserController {
         }
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
+        user.setUserPassword(DigestUtils.md5DigestAsHex((SALT + user.getUserPassword()).getBytes()));
         boolean result = userService.updateById(user);
         return ResultUtils.success(result);
     }

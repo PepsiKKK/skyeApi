@@ -1,20 +1,23 @@
-package com.skye.project.model.vo;
+package com.skye.common.model.entity;
 
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户视图
+ * 用户
  *
  * @TableName user
  */
+@TableName(value = "user")
 @Data
-public class UserVO implements Serializable {
+public class User implements Serializable {
     /**
      * id
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -37,6 +40,9 @@ public class UserVO implements Serializable {
      */
     private Integer gender;
 
+    /**
+     * 账号状态（0- 正常 1- 封号）
+     */
     private Integer status;
 
     /**
@@ -45,11 +51,17 @@ public class UserVO implements Serializable {
     private String userRole;
 
     /**
-     * 访问密钥
+     * 密码
+     */
+    private String userPassword;
+
+    /**
+     * 签名 ak
      */
     private String accessKey;
+
     /**
-     * 秘密密钥
+     * 签名 sk
      */
     private String secretKey;
 
@@ -63,5 +75,12 @@ public class UserVO implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 是否删除
+     */
+    @TableLogic
+    private Integer isDelete;
+
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

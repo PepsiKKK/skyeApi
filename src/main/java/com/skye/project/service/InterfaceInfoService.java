@@ -3,6 +3,7 @@ package com.skye.project.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.skye.common.model.entity.InterfaceInfo;
+import com.skye.project.common.BaseResponse;
 import com.skye.project.common.DeleteRequest;
 import com.skye.project.common.IdRequest;
 import com.skye.project.model.dto.interfaceInfo.InterfaceInfoAddRequest;
@@ -88,6 +89,6 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
      * @param request
      * @return
      */
-    String invokeInterfaceInfo(InterfaceInfoInvokeRequest interfaceInfoInvokeRequest, HttpServletRequest request);
+    BaseResponse<Object> invokeInterfaceInfo(InterfaceInfoInvokeRequest interfaceInfoInvokeRequest, HttpServletRequest request);
 
 }

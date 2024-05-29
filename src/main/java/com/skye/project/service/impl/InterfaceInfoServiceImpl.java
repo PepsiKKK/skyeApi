@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.skye.common.model.entity.User;
-import com.skye.project.common.DeleteRequest;
-import com.skye.project.common.ErrorCode;
-import com.skye.project.common.IdRequest;
+import com.skye.project.common.*;
 import com.skye.project.constant.CommonConstant;
 import com.skye.project.exception.BusinessException;
 import com.skye.common.model.entity.InterfaceInfo;
@@ -213,20 +211,21 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     }
 
     @Override
-    public String invokeInterfaceInfo(InterfaceInfoInvokeRequest interfaceInfoInvokeRequest, HttpServletRequest request) {
-        //如果id为null或id小于等于0
+    public BaseResponse<Object> invokeInterfaceInfo(InterfaceInfoInvokeRequest interfaceInfoInvokeRequest, HttpServletRequest request) {
+        // 校验传参和接口是否存在
         if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+
         //获取接口的id值
         long id = interfaceInfoInvokeRequest.getId();
         //获取用户请求参数
-        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+
         //判断查询结果
         InterfaceInfo oldInterfaceInfo = interfaceInfoMapper.selectById(id);
         if (oldInterfaceInfo == null){
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-        }
+        }// todo 可以抽取出一个抛出异常工具类 简化代码：ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
         //判断是否为下线状态
         if (oldInterfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
@@ -235,20 +234,23 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         User loginUser = userService.getLoginUser(request);
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
+        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+        String url = oldInterfaceInfo.getUrl();
+        String method = oldInterfaceInfo.getMethod();
+
         //新建一个临时的skyeApiClient对象，用于传入用户自己的ak、sk
         SkyeApiClient skyeApiClient = new SkyeApiClient(accessKey, secretKey);
-        //只需要进行测试调用，需要解析传递过来的参数
-/*        Gson gson = new Gson();
-        //将用户请求参数转换为com.skye.skyeApiClientSdk.model.User对象
-        com.skye.skyeApiClientSdk.model.User
-                user = gson.fromJson(userRequestParams, com.skye.skyeApiClientSdk.model.User.class);*/
-
-        //将请求封装
-        Gson gson = new Gson();
-        //将用户请求参数转换为com.skye.skyeApiClientSdk.model.User对象
-        com.skye.skyeApiClientSdk.model.User
-                user = gson.fromJson(userRequestParams, com.skye.skyeApiClientSdk.model.User.class);
-        return skyeApiClient.getUserNameByPost(user);
+        String invokeResult;
+        try {
+            // 执行方法
+            invokeResult = skyeApiClient.invokeInterface(userRequestParams, url, method);
+            if (StringUtils.isBlank(invokeResult)) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口数据为空");
+            }
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
+        }
+        return ResultUtils.success(invokeResult);
     }
 }
 

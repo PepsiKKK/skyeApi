@@ -174,8 +174,8 @@ public class InterfaceInfoController {
     @PostMapping("/invoke")
     public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
                                                      HttpServletRequest request) {
-        String result = interfaceInfoService.invokeInterfaceInfo(interfaceInfoInvokeRequest, request);
-        return ResultUtils.success(result);
+        BaseResponse<Object> objectBaseResponse = interfaceInfoService.invokeInterfaceInfo(interfaceInfoInvokeRequest, request);
+        return ResultUtils.success(objectBaseResponse);
     }
 
 }

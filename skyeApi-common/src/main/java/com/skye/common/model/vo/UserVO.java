@@ -1,4 +1,4 @@
-package com.skye.project.model.vo;
+package com.skye.common.model.vo;
 
 import lombok.Data;
 
@@ -37,21 +37,15 @@ public class UserVO implements Serializable {
      */
     private Integer gender;
 
+    /**
+     * 账号状态（0- 正常 1- 封号）
+     */
     private Integer status;
 
     /**
      * 用户角色: user, admin
      */
     private String userRole;
-
-    /**
-     * 访问密钥
-     */
-    private String accessKey;
-    /**
-     * 秘密密钥
-     */
-    private String secretKey;
 
     /**
      * 创建时间
