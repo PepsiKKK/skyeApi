@@ -4,6 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.http.Method;
 import cn.hutool.json.JSONUtil;
 import com.skye.skyeApiClientSdk.model.User;
 
@@ -92,7 +93,21 @@ public class SkyeApiClient {
     }
 
     public String invokeInterface(String params, String url, String method) throws UnsupportedEncodingException {
-        HttpResponse httpResponse = ((HttpRequest) HttpRequest.post(GATEWAY_HOST + url).header("Accept-Charset", "UTF-8").addHeaders(this.getHeaderMap(params, method))).body(params).execute();
+/*        HttpResponse httpResponse = ((HttpRequest) HttpRequest
+                .post(GATEWAY_HOST + url)
+                .header("Accept-Charset", "UTF-8")
+                .addHeaders(this.getHeaderMap(params, method)))
+                .body(params)
+                .execute();*/
+        Method value = Method.valueOf(method);
+//        if (value == Method.GET) url = url+"?"+params;
+        HttpResponse httpResponse = ((HttpRequest) HttpRequest
+                .of(GATEWAY_HOST + url).method(value)
+                .header("Accept-Charset", "UTF-8")
+                .addHeaders(this.getHeaderMap(params, method)))
+                .body(params)
+                // 设置queryParams
+                .execute();
         return JSONUtil.formatJsonStr(httpResponse.body());
     }
 }

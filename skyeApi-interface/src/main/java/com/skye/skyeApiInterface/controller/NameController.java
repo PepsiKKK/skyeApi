@@ -13,8 +13,9 @@ public class NameController {
     //创建三个模拟接口
 
     @GetMapping("/get")
-    public String getNameByGet(String name) {
-        return "GET 你的名字是" + name;
+    public String getNameByGet(String name, HttpServletRequest request) {
+        String body = request.getHeader("body");
+        return "GET 你的名字是" + body;
     }
 
     @PostMapping("/post")

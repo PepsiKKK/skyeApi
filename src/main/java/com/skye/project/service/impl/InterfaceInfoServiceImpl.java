@@ -251,6 +251,13 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
         }
         return ResultUtils.success(invokeResult);
+
+/*        //将请求封装
+        Gson gson = new Gson();
+        //将用户请求参数转换为com.skye.skyeApiClientSdk.model.User对象
+        com.skye.skyeApiClientSdk.model.User
+                user = gson.fromJson(userRequestParams, com.skye.skyeApiClientSdk.model.User.class);
+        return skyeApiClient.getUserNameByPost(user);*/
     }
 }
 

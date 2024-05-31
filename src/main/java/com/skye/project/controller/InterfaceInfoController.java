@@ -175,7 +175,7 @@ public class InterfaceInfoController {
     public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
                                                      HttpServletRequest request) {
         BaseResponse<Object> objectBaseResponse = interfaceInfoService.invokeInterfaceInfo(interfaceInfoInvokeRequest, request);
-        return ResultUtils.success(objectBaseResponse);
+        return ResultUtils.success(objectBaseResponse.getData());
     }
 
 }

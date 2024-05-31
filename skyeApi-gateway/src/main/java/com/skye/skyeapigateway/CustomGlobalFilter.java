@@ -67,7 +67,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
          */
         ServerHttpRequest request = exchange.getRequest();
         log.info("请求唯一标识：{}", request.getId());
-        String path = INTERFACE_HOST + request.getPath().value();
+        String path = request.getPath().value();
         log.info("请求路径：{}", path);
         String method = request.getMethod().toString();
         log.info("请求方法：{}", method);
@@ -75,7 +75,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String sourceAddress = request.getLocalAddress().getHostString();
         log.info("请求来源地址：{}", sourceAddress);
         log.info("请求来源地址：{}", request.getRemoteAddress());
-
+// todo 请求参数path还是没有？的参数
         // 3、黑白名单
         /*
         这里选择白名单
@@ -89,7 +89,6 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         if (!IP_WHITE_LIST.contains(sourceAddress)) {
             return handleNoAuth(response);
         }
-
         // 4、用户鉴权aksk是否合法
         //从请求头中获取参数
         HttpHeaders headers = request.getHeaders();
